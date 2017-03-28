@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<style>
+/*reset start*/
+html,body{ overflow:hidden; height:100%;}
+body,h1,h2,h3,h4,p,ul,ol{ margin:0; padding:0; font:140x "Microsoft YaHei"}
+li{ list-style:none;}
+img{ border:none;}
+a{ text-decoration:none;}
+a:active{ color:#009ee0;}
+/*reset end*/
+
+/*common start*/
+.clear{ zoom:1;}
+.clear:after{ content:''; display:block; clear:both;}
+/*common end*/
+
+/*frame start*/
+#main{ width:100%; height:100%;}
+#header{ width:100%; height:80px; background:white;}
+#headerMain{ width:1100px; height:100%; margin:0 auto; position:relative;}
+#logo{ float:left; margin-top:30px;}
+#nav{ float:right; margin-top:50px;}
+#nav li{ float:left; position:relative; margin-left:40px;}
+#nav li .up{ position:absolute; left:0; top:0; color:black; width:0%; overflow:hidden; transition:.5s width;}
+#nav li:hover .up{ width:100%;}
+#arrow{ width:21px; height:11px; background:url(img/menuIndicator.png) no-repeat; position:absolute; left:50%; bottom:-11px; transition:.5s left; z-index:10;}
+#content{ width:100%; position:relative; overflow:hidden;}
+#list{ width:100%; position:absolute; left:0; top:0; transition:.5s top;}
+#list .liList{ width:2000px; position:relative; left:50%; margin-left:-1000px; overflow:hidden;}
+#list .divList{ width:1100px; height:520px; background:red; margin:0px auto;}
+/*frame end*/
+
+/*home start*/
+#home{ background:url(img/bg1.jpg) no-repeat;}
+/*home end*/
+
+/*course start*/
+#course{ background:url(img/bg3.jpg) no-repeat;}
+/*course end*/
+
+/*works start*/
+#works{ background:url(img/bg4.jpg) no-repeat;}
+/*works end*/
+
+/*about start*/
+#about{ background:url(img/bg5.jpg) no-repeat;}
+/*about end*/
+
+/*team start*/
+#team{ background:url(img/bg2.jpg) no-repeat;}
+/*team end*/
+
+
+</style>
+
+<script>
+window.onload = function(){
+	var oHeader = $('header');
+	var oNav = $('nav');
+	var oArrow = $('arrow');
+	var oList = $('list');
+	var oContent = $('content');
+	var aLiNav = oNav.getElementsByTagName('li');
+	var aLiList = getByClass(oList,'liList');
+	var aDivList = getByClass(oList,'divList');
+	var iNow = 0;
+	var iContentHeight = 0;
+	
+	contentAuto();
+	listContentAuto();
+	bindNav();
+	mouseWheel();
+	window.onresize = fnResize;
+	
+	function bindNav(){
+		var oDiv = aLiNav[0].getElementsByTagName('div')[0];
+		oDiv.style.width = '100%';
+		oArrow.style.left = aLiNav[0].offsetLeft + aLiNav[0].offsetWidth/2 - oArrow.offsetWidth/2 +'px';
+		for(var i=0; i<aLiNav.length;i++){
+			aLiNav[i].index = i;
+			aLiNav[i].onmousedown = function(){
+				toMove(this.index);
+				iNow = this.index;
+			}
+		}
+	}
+	
+	function toMove(index){
+		for(var i=0; i<aLiNav.length;i++){
+			var oDiv = aLiNav[i].getElementsByTagName('div')[0];
+			oDiv.style.width = '';
+		}
+		var oDiv = aLiNav[index].getElementsByTagName('div')[0];
+		oDiv.style.width = '100%';
+		oArrow.style.left = aLiNav[index].offsetLeft + aLiNav[index].offsetWidth/2 - oArrow.offsetWidth/2 +'px';
+		oList.style.top = -index * iContentHeight +'px';
+	}
+	
+	function contentAuto(){
+		iContentHeight = viewHeight() - oHeader.offsetHeight;
+		oContent.style.height = iContentHeight +'px';
+		for(var i=0; i<aLiList.length;i++){
+			aLiList[i].style.height = iContentHeight +'px';
+		}
+		oList.style.top = -iNow * iContentHeight +'px';
+	}
+	
+	function listContentAuto(){
+		var mt = (iContentHeight - 520)/2;
+		for(var i=0; i<aDivList.length;i++){
+			aDivList[i].style.marginTop = mt +'px';
+		}
+	}
+	
+	function fnResize(){
+		contentAuto();
+		listContentAuto();
+	}
+	
+	function mouseWheel(){
+		var bBtn = true;
+		var timer = null;
+		
+		if(oContent.addEventListener){
+			oContent.addEventListener('DOMMouseScroll',function(ev){
+				var ev = ev || window.event;
+				
+			})
+		}
+		
+		function toChange(ev){
+			if(ev.detail){
+				bBtn = ev.detail >0 ? true : false;
+			}else{
+				bBtn = ev.wheelDetal < 0 ? true : false;
+			}
+			
+			if(bBtn){
+				if(iNow != aLiList.length -1){
+					iNow++;
+				}
+				
+				toMove(iNow);
+			}
+			
+		}
+		
+		
+	}
+
+	function $(id){
+		return document.getElementById(id);
+	}
+	
+	function viewWidth(){
+		return window.innerWidth || document.documentElement.clientWidth;
+	}
+	
+	function viewHeight(){
+		return window.innerHeight || document.documentElement.clientHeight;
+	}
+	
+	function getByClass(oParent,sClass){
+		var aElem = oParent.getElementsByTagName('*');
+		var arr = [];
+		for(var i=0; i<aElem.length;i++){
+			if(aElem[i].className == sClass){
+				arr.push(aElem[i]);
+			}
+		}
+		return arr;
+	}
+	
+	
+}
+
+</script>
+</head>
+
+<body>
+<div id="main">
+	<div id="header">
+    	<div id="headerMain">
+            <a href="#" id="logo">
+                <img src="img/logo.png"/>
+            </a>
+            <ul id="nav">
+                <li>
+                    <a href="javascript:;">
+                        <div class="up"><img src="img/home_gruen.png"></div>
+                        <div><img src="img/home.png"></div>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <div class="up">Course</div>
+                        <div>Course</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <div class="up">Works</div>
+                        <div>Works</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <div class="up">About</div>
+                        <div>About</div>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <div class="up">Team</div>
+                        <div>Team</div>
+                    </a>
+                </li>
+            </ul>
+            <div id="arrow"></div>
+        </div>
+    </div>
+    <div id="content">
+    	<ul id="list">
+        	<li id="home" class="liList">
+            	<div class="divList">11111111111</div>
+            </li>
+        	<li id="course" class="liList">
+            	<div class="divList">2222222222</div>
+            </li>
+        	<li id="works" class="liList">
+            	<div class="divList">333333333333</div>
+            </li>
+        	<li id="about" class="liList">
+            	<div class="divList">44444444444</div>
+            </li>
+        	<li id="team" class="liList">
+            	<div class="divList">5555555555</div>
+            </li>
+            
+        </ul>
+    </div>
+</div>
+</body>
+</html>
